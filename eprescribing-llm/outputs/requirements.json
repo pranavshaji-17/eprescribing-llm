@@ -1,0 +1,911 @@
+[
+  {
+    "id": "REQ-UC1-01",
+    "use_case": "UC1",
+    "use_case_name": "Create medication order",
+    "statement": "The system shall create one MedicationRequest instance per drug in a multi-drug prescription.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "FHIR-02"
+    ],
+    "reasoning": "Each medication order must be represented as a separate resource instance to ensure accurate tracking and safety checks for individual drugs, as per HL7 FHIR standards.",
+    "acceptance_criteria": "A prescription with multiple drugs results in exactly one MedicationRequest instance per drug, verified by querying the system's medication request list.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC1-02",
+    "use_case": "UC1",
+    "use_case_name": "Create medication order",
+    "statement": "The system shall associate each MedicationRequest with a Patient, Practitioner, and Encounter resource.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "FHIR-04"
+    ],
+    "reasoning": "These associations provide essential context for the prescription, enabling accurate patient identification, prescriber accountability, and care setting tracking as required by FHIR standards.",
+    "acceptance_criteria": "Each MedicationRequest instance must include valid references to a Patient, Practitioner, and Encounter resource in its metadata.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC1-03",
+    "use_case": "UC1",
+    "use_case_name": "Create medication order",
+    "statement": "The system shall represent the prescription intent only, without recording administration status or events of actual medication delivery.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "FHIR-01"
+    ],
+    "reasoning": "MedicationRequest is defined as an order of intent, not a record of administration; this ensures compliance with FHIR semantics and prevents misinterpretation of prescription status.",
+    "acceptance_criteria": "The system shall not include any field indicating that medication has been administered to the patient in the MedicationRequest instance.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC1-04",
+    "use_case": "UC1",
+    "use_case_name": "Create medication order",
+    "statement": "The system shall allow a prescriber to cancel or change a prescription after it has been issued, with status updates reflecting the new intent via the status and intent elements of the MedicationRequest resource.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "FHIR-05",
+      "PROJ-04"
+    ],
+    "reasoning": "The ability to modify prescriptions post-issue is critical for patient safety and clinical workflow, supported by FHIR's status and intent fields which track the lifecycle of a request.",
+    "acceptance_criteria": "A prescriber can update the status (e.g., from 'active' to 'cancelled') or intent (e.g., from 'order' to 'proposal') of an existing MedicationRequest, and these changes are reflected in the resource instance.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC1-05",
+    "use_case": "UC1",
+    "use_case_name": "Create medication order",
+    "statement": "The system shall require two-factor authentication for controlled substance prescriptions during the signing process.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-04"
+    ],
+    "reasoning": "Two-factor signing is mandated for controlled substances in the project's use case flow, ensuring stronger prescriber identity verification and compliance with regulatory expectations such as DEA EPCS rules.",
+    "acceptance_criteria": "All prescriptions involving controlled substances must trigger a two-factor authentication step before finalizing the signature process.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC1-06",
+    "use_case": "UC1",
+    "use_case_name": "Create medication order",
+    "statement": "The system shall maintain an immutable audit trail for all actions related to prescription creation, modification, and transmission that includes timestamps, user IDs, and action types.",
+    "type": "NFR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-04"
+    ],
+    "reasoning": "An immutable audit trail is essential for compliance with regulatory requirements and for accountability in cases of errors or misuse, as required by the project's design and use case flow.",
+    "acceptance_criteria": "All actions (e.g., creation, cancellation) are logged with a timestamp, user identifier, and action type, and these logs cannot be altered after recording.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC2-01",
+    "use_case": "UC2",
+    "use_case_name": "Run safety checks",
+    "statement": "The system shall perform drug-drug interaction, allergy, and dosing checks against a drug knowledge base before finalizing a medication order.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Drug knowledge base",
+    "sources": [
+      "PROJ-03",
+      "PROJ-01"
+    ],
+    "reasoning": "Medication errors due to missed interactions or allergies are common in paper-based systems. Running safety checks before finalization prevents such errors and aligns with the project's goal of reducing medication harm.",
+    "acceptance_criteria": "A prescription is not finalized unless the system returns a clear list of alerts for drug interactions, allergies, or dosing issues that were detected during the check.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC2-02",
+    "use_case": "UC2",
+    "use_case_name": "Run safety checks",
+    "statement": "The system shall display all safety check alerts to the prescriber before allowing finalization of the medication order.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-03",
+      "PROJ-01"
+    ],
+    "reasoning": "Visibility of safety alerts ensures prescribers are aware of potential risks, enabling informed decisions and reducing the likelihood of prescribing errors.",
+    "acceptance_criteria": "The prescriber must see all generated alerts in a clear, actionable format before finalizing the prescription.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC2-03",
+    "use_case": "UC2",
+    "use_case_name": "Run safety checks",
+    "statement": "The system shall use a standardized drug knowledge base interface to retrieve interaction and allergy data for each medication order.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Drug knowledge base",
+    "sources": [
+      "PROJ-02",
+      "PROJ-03"
+    ],
+    "reasoning": "Standardized interfaces ensure interoperability with external drug databases like First Databank, enabling consistent and reliable safety checks across systems.",
+    "acceptance_criteria": "The system successfully retrieves interaction and allergy data from a recognized drug knowledge base using a defined interface protocol (e.g., HL7 FHIR or NCPDP).",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC2-04",
+    "use_case": "UC2",
+    "use_case_name": "Run safety checks",
+    "statement": "The system shall log all safety check results, including alerts and their resolution status, in an audit trail for each medication order.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "PROJ-03",
+      "PROJ-04"
+    ],
+    "reasoning": "Audit trails are required to demonstrate compliance with regulatory standards and support accountability, especially when investigating medication errors or audit failures.",
+    "acceptance_criteria": "The audit trail contains a timestamped record of all safety checks performed and the outcome for each prescription order.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC2-05",
+    "use_case": "UC2",
+    "use_case_name": "Run safety checks",
+    "statement": "The system shall not allow finalization of a medication order if any critical safety alert (e.g., severe allergy or fatal interaction) is present in the drug knowledge base check results.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-03",
+      "PROJ-01"
+    ],
+    "reasoning": "Critical safety issues must be prevented from being prescribed to avoid patient harm. This requirement directly addresses the problem of missed allergies and interactions in paper-based systems.",
+    "acceptance_criteria": "The system blocks finalization when a critical alert (e.g., life-threatening allergy or interaction) is detected during the safety check.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC2-06",
+    "use_case": "UC2",
+    "use_case_name": "Run safety checks",
+    "statement": "The system shall ensure that all safety checks are performed independently of prescriber input and based solely on drug knowledge base data.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Drug knowledge base",
+    "sources": [
+      "PROJ-03",
+      "PROJ-01"
+    ],
+    "reasoning": "To prevent bias or error due to prescriber oversight, safety checks must be objective and data-driven, ensuring consistent and reliable outcomes.",
+    "acceptance_criteria": "The system performs all checks using only the drug knowledge base data without relying on prescriber annotations or manual input.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC3-01",
+    "use_case": "UC3",
+    "use_case_name": "Cancel or change order",
+    "statement": "The system shall allow a prescriber to cancel or change an existing medication order after it has been issued.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-04"
+    ],
+    "reasoning": "This aligns with the target use case description and enables prescribers to correct errors post-issuance, improving patient safety and clinical accuracy.",
+    "acceptance_criteria": "A prescriber must be able to initiate a cancel or change request for an existing order through the system interface, and the action must be recorded in the audit trail.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC3-02",
+    "use_case": "UC3",
+    "use_case_name": "Cancel or change order",
+    "statement": "The system shall transmit a change request transaction to the pharmacy using the NCPDP SCRIPT standard when a prescriber modifies an issued order.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "SCRIPT-02"
+    ],
+    "reasoning": "The NCPDP SCRIPT standard defines a 'change request' transaction type for modifying existing prescriptions, ensuring interoperability and compliance with industry standards.",
+    "acceptance_criteria": "Upon a change request initiated by the prescriber, the system must send an appropriate SCRIPT transaction to the pharmacy with correct transaction code and data fields.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC3-03",
+    "use_case": "UC3",
+    "use_case_name": "Cancel or change order",
+    "statement": "The system shall transmit a cancel transaction to the pharmacy using the NCPDP SCRIPT standard when a prescriber cancels an issued order.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "SCRIPT-02"
+    ],
+    "reasoning": "The NCPDP SCRIPT standard includes a 'cancel' transaction type for terminating prescriptions, which ensures pharmacies are informed of the cancellation and can update their records accordingly.",
+    "acceptance_criteria": "When a prescriber cancels an order, the system must send a SCRIPT cancel transaction to the pharmacy with correct transaction details and status updates.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC3-04",
+    "use_case": "UC3",
+    "use_case_name": "Cancel or change order",
+    "statement": "The system shall update the MedicationRequest resource in the FHIR representation to reflect the new or cancelled status when a change or cancellation is made.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "FHIR-05"
+    ],
+    "reasoning": "The HL7 FHIR MedicationRequest resource uses 'status' and 'intent' elements to represent the lifecycle of a prescription, ensuring accurate state representation in digital records.",
+    "acceptance_criteria": "After a change or cancellation, the system must update the status field (e.g., from 'active' to 'cancelled') and maintain correct intent values (e.g., 'order') in the FHIR MedicationRequest resource.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC3-05",
+    "use_case": "UC3",
+    "use_case_name": "Cancel or change order",
+    "statement": "The system shall support upgrading to new mandated versions of the NCPDP SCRIPT standard as required by CMS.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "SCRIPT-03"
+    ],
+    "reasoning": "CMS mandates specific, evolving versions of the NCPDP SCRIPT standard; compliance requires the system to adapt to these changes over time to remain legally and technically compliant.",
+    "acceptance_criteria": "The system must detect and support transitions between mandated SCRIPT version updates as defined by CMS, without breaking existing functionality or data exchange.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC3-06",
+    "use_case": "UC3",
+    "use_case_name": "Cancel or change order",
+    "statement": "The system shall maintain a full audit trail of all cancel or change actions, including timestamp, prescriber identity, and action type, for review by compliance officers.",
+    "type": "NFR",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "PROJ-04"
+    ],
+    "reasoning": "Audit trails are essential for accountability, regulatory compliance, and tracing actions that may impact patient safety or drug misuse, especially in controlled substance prescribing.",
+    "acceptance_criteria": "All cancel or change events must be logged with a timestamp, prescriber ID, action type (e.g., 'change', 'cancel'), and the original order details in an immutable audit log accessible to compliance officers.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC4-01",
+    "use_case": "UC4",
+    "use_case_name": "Transmit to pharmacy",
+    "statement": "The system shall transmit a signed prescription to the pharmacy system using the NCPDP SCRIPT message format.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Pharmacy system",
+    "sources": [
+      "SCRIPT-01"
+    ],
+    "reasoning": "NCPDP SCRIPT is the established US standard for exchanging prescription information, ensuring interoperability and consistency across prescriber and pharmacy systems.",
+    "acceptance_criteria": "The pharmacy system receives a message in NCPDP SCRIPT format with all required fields populated and correctly structured.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC4-02",
+    "use_case": "UC4",
+    "use_case_name": "Transmit to pharmacy",
+    "statement": "The system shall use the appropriate NCPDP SCRIPT transaction type to transmit the prescription, based on whether it is a new order, change request, refill, or cancellation.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Pharmacy system",
+    "sources": [
+      "SCRIPT-02"
+    ],
+    "reasoning": "Different prescription actions require distinct SCRIPT transaction types to ensure accurate processing and tracking by pharmacy systems.",
+    "acceptance_criteria": "The transmitted message uses the correct SCRIPT transaction type (e.g., NEW, CHANGE) corresponding to the action being performed.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC4-03",
+    "use_case": "UC4",
+    "use_case_name": "Transmit to pharmacy",
+    "statement": "The system shall support upgrading to new mandated versions of NCPDP SCRIPT as required by CMS regulations.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "SCRIPT-03"
+    ],
+    "reasoning": "CMS mandates specific, evolving versions of the SCRIPT standard; compliance requires the system to adapt to these changes over time to remain legally and technically compliant.",
+    "acceptance_criteria": "The system can detect and adopt new mandated SCRIPT version requirements and validate that all outgoing messages conform to the current version.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC4-04",
+    "use_case": "UC4",
+    "use_case_name": "Transmit to pharmacy",
+    "statement": "The system shall include a fill status update message in response to pharmacy confirmation of prescription fulfillment.",
+    "type": "FR",
+    "priority": "Should",
+    "actor": "Pharmacy system",
+    "sources": [
+      "SCRIPT-02"
+    ],
+    "reasoning": "The SCRIPT standard includes transaction types for tracking fill status, enabling real-time visibility into prescription outcomes and supporting audit trails.",
+    "acceptance_criteria": "When the pharmacy confirms a fill, the system receives and records this update in its internal state with appropriate metadata.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC4-05",
+    "use_case": "UC4",
+    "use_case_name": "Transmit to pharmacy",
+    "statement": "The system shall maintain an immutable audit trail of all transmission events including timestamps, message content, and recipient details.",
+    "type": "NFR",
+    "priority": "Must",
+    "actor": "Pharmacy system",
+    "sources": [
+      "PROJ-04"
+    ],
+    "reasoning": "An immutable audit trail is essential for compliance with regulatory requirements and for verifying accountability in case of errors or misuse, especially for controlled substances.",
+    "acceptance_criteria": "All transmission events are logged with a timestamp, message ID, and recipient system details, and the log cannot be altered after creation.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC4-06",
+    "use_case": "UC4",
+    "use_case_name": "Transmit to pharmacy",
+    "statement": "The system shall ensure that all transmitted prescriptions include a digital signature that is cryptographically valid and tied to the prescriber's credentials.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Pharmacy system",
+    "sources": [
+      "PROJ-04"
+    ],
+    "reasoning": "The requirement for two-factor signing (for controlled substances) and digital signatures ensures authenticity, integrity, and prescriber identity verification as mandated by regulatory frameworks.",
+    "acceptance_criteria": "Each transmitted prescription includes a cryptographically signed message that is verifiable and linked to the authenticated prescriber credentials.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC5-01",
+    "use_case": "UC5",
+    "use_case_name": "Sign prescription",
+    "statement": "The system shall allow the prescriber to electronically sign a prescription after completing safety checks and before transmission.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-03",
+      "PROJ-04"
+    ],
+    "reasoning": "The signing step is a core part of the prescribing workflow and must occur after safety checks to ensure medication safety. The evidence shows that signing is a required action in the transmit flow and is tied to prescription creation.",
+    "acceptance_criteria": "A prescriber can initiate, complete, and submit a signature on a prescription only after all safety checks have been passed and before transmission begins.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC5-02",
+    "use_case": "UC5",
+    "use_case_name": "Sign prescription",
+    "statement": "The system shall verify the prescriber's identity prior to allowing electronic signing of any prescription for controlled substances.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "DEA-02"
+    ],
+    "reasoning": "The DEA mandates that prescriber identity must be proofed before signing prescriptions for controlled substances to prevent forgery and misuse. This is a direct regulatory requirement from EPCS regulations.",
+    "acceptance_criteria": "The system shall require successful identity verification (e.g., credential provider confirmation) before enabling the prescriber to sign any prescription involving controlled substances.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC5-03",
+    "use_case": "UC5",
+    "use_case_name": "Sign prescription",
+    "statement": "The system shall maintain a full audit trail of all events related to the creation, signing, and transmission of prescriptions for controlled substances.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "DEA-06"
+    ],
+    "reasoning": "The DEA requires a full audit trail to demonstrate compliance with EPCS regulations. This ensures accountability and enables verification of prescriber actions, which is essential for regulatory audits.",
+    "acceptance_criteria": "All events such as identity proofing, signing, and transmission must be logged in a tamper-evident, time-stamped audit log accessible for review by compliance officers.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC5-04",
+    "use_case": "UC5",
+    "use_case_name": "Sign prescription",
+    "statement": "The system shall enforce two-factor authentication when signing prescriptions containing controlled substances.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-04"
+    ],
+    "reasoning": "Two-factor signing is explicitly defined as an extension of the sign prescription use case for controlled drugs, ensuring higher security and reducing forgery risk. This aligns with regulatory intent to protect high-risk prescriptions.",
+    "acceptance_criteria": "For any prescription containing a controlled substance, the prescriber must complete two-factor authentication before the system allows electronic signing.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC5-05",
+    "use_case": "UC5",
+    "use_case_name": "Sign prescription",
+    "statement": "The system shall not allow a prescription to be signed without prior completion of safety checks for drug interactions and allergies.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-03",
+      "PROJ-04"
+    ],
+    "reasoning": "Safety checks are a core functionality that must precede signing to prevent medication errors. The workflow shows that safety checks are included in the creation process and must be completed before signing.",
+    "acceptance_criteria": "The system shall block signature entry until all drug interaction, allergy, and dose warnings have been reviewed and resolved by the prescriber.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC5-06",
+    "use_case": "UC5",
+    "use_case_name": "Sign prescription",
+    "statement": "The system shall ensure that all signed prescriptions are time-stamped with a precise timestamp at the moment of signing.",
+    "type": "NFR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "DEA-06",
+      "PROJ-03"
+    ],
+    "reasoning": "Accurate timing is essential for audit trail integrity and compliance with EPCS, which requires precise event logging. A timestamp ensures chronological accuracy of prescription events.",
+    "acceptance_criteria": "The system shall record the exact time (to at least one-second precision) when a prescription is signed and store it in an immutable audit log.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC6-01",
+    "use_case": "UC6",
+    "use_case_name": "Two-factor signing",
+    "statement": "The system shall require two-factor authentication at the moment of signing for controlled substance prescriptions, with one factor originating from a separate device or token.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "DEA-03"
+    ],
+    "reasoning": "The DEA mandates two-factor authentication for controlled substances to prevent forgery and unauthorized access. One factor must come from a separate device or token, ensuring the prescriber's identity is verified beyond just password-based methods.",
+    "acceptance_criteria": "When a controlled substance prescription is signed, the system shall prompt the prescriber to provide a second authentication factor from a separate device or token, and only allow signing upon successful verification of both factors.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC6-02",
+    "use_case": "UC6",
+    "use_case_name": "Two-factor signing",
+    "statement": "The system shall enforce that two-factor authentication for signing is applied exclusively to controlled substance prescriptions and not to non-controlled substances.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "DEA-03",
+      "PROJ-04"
+    ],
+    "reasoning": "The DEA's EPCS rules specifically apply two-factor authentication only to controlled substance prescriptions. Applying it broadly would violate regulatory scope and introduce unnecessary complexity or risk for non-controlled drugs.",
+    "acceptance_criteria": "The system shall not require two-factor authentication when signing a prescription that does not contain a controlled substance, regardless of user input or configuration.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC6-03",
+    "use_case": "UC6",
+    "use_case_name": "Two-factor signing",
+    "statement": "The system shall record the time, date, and identity of both authentication factors used during the two-factor signing process for each controlled substance prescription in an immutable audit trail.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "DEA-06",
+      "PROJ-03"
+    ],
+    "reasoning": "The DEA requires a full audit trail for compliance with EPCS, including all events related to signing. Recording both authentication factors ensures traceability and supports verification of prescriber identity and actions in case of audits or investigations.",
+    "acceptance_criteria": "For every controlled substance prescription signed using two-factor authentication, the system shall store the timestamp, date, and details of each factor (e.g., token response, device ID) in an unalterable log that can be retrieved for audit purposes.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC6-04",
+    "use_case": "UC6",
+    "use_case_name": "Two-factor signing",
+    "statement": "The system shall not allow a prescription to be signed with two-factor authentication if the prescriber's identity has not been verified through a separate credential provider prior to signing.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-04",
+      "DEA-03"
+    ],
+    "reasoning": "Two-factor authentication for controlled substances must be part of a broader identity verification process. The prescriber's identity must first be authenticated before any signing occurs, as per the EPCS requirements and use case relationships.",
+    "acceptance_criteria": "The system shall block the two-factor signing step until the prescriber has successfully completed identity verification via a credential provider, as defined in UC7 Verify prescriber ID.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC6-05",
+    "use_case": "UC6",
+    "use_case_name": "Two-factor signing",
+    "statement": "The system shall ensure that all events related to two-factor authentication for controlled substance prescriptions are logged and retained for at least five years from the date of the prescription event.",
+    "type": "NFR",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-06"
+    ],
+    "reasoning": "Regulatory compliance requires long-term retention of audit data. The DEA mandates that audit trails be maintained to demonstrate compliance, and five years is a common minimum for such records in healthcare systems.",
+    "acceptance_criteria": "The system shall store all events related to two-factor authentication during controlled substance prescription signing and ensure they are accessible and unaltered for at least 5 years post-event.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC6-06",
+    "use_case": "UC6",
+    "use_case_name": "Two-factor signing",
+    "statement": "The system shall not allow a prescriber to sign a controlled substance prescription using the same device or token as their primary login credentials unless explicitly configured by an authorized credential provider with two-factor authentication enabled on a separate device.",
+    "type": "CON",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "DEA-03"
+    ],
+    "reasoning": "The DEA requires one factor to come from a separate device or token, meaning the same device cannot be used for both authentication and signing. This constraint ensures physical separation of authentication factors.",
+    "acceptance_criteria": "If a prescriber attempts to use their primary login device as the second factor during two-factor signing, the system shall reject the request and prompt them to use a different device or token.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC7-01",
+    "use_case": "UC7",
+    "use_case_name": "Verify prescriber ID",
+    "statement": "The system shall verify the prescriber's identity using credentials provided by a credential provider before allowing the creation of an electronic prescription for a controlled substance.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Credential provider",
+    "sources": [
+      "DEA-02"
+    ],
+    "reasoning": "The DEA requires proof of prescriber identity before signing prescriptions for controlled substances, ensuring only authorized individuals can issue such prescriptions and reducing the risk of forgery or misuse.",
+    "acceptance_criteria": "When a prescriber attempts to create a prescription for a controlled substance, the system must prompt for and validate credentials from a credential provider before allowing any action.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC7-02",
+    "use_case": "UC7",
+    "use_case_name": "Verify prescriber ID",
+    "statement": "The system shall require two-factor authentication as part of the identity verification process when creating prescriptions for controlled substances.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Credential provider",
+    "sources": [
+      "PROJ-04",
+      "DEA-02"
+    ],
+    "reasoning": "The Two-Factor Signing use case is explicitly linked to Verify prescriber ID and applies only to controlled substances, aligning with DEA EPCS requirements that mandate stronger authentication for high-risk prescriptions.",
+    "acceptance_criteria": "For any prescription involving a controlled substance, the system must enforce two-factor authentication during identity verification before allowing the prescription to be signed or transmitted.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC7-03",
+    "use_case": "UC7",
+    "use_case_name": "Verify prescriber ID",
+    "statement": "The system shall record the timestamp, method, and outcome of each prescriber identity verification attempt in an immutable audit trail.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Credential provider",
+    "sources": [
+      "PROJ-01",
+      "PROJ-04"
+    ],
+    "reasoning": "An auditable record is essential for compliance with DEA EPCS and for demonstrating accountability in cases of misuse or errors, supporting traceability and regulatory scrutiny.",
+    "acceptance_criteria": "Each identity verification event must be logged with a timestamp, the authentication method used (e.g., SMS, token), and whether it succeeded or failed, and this data must persist in an unalterable format.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC7-04",
+    "use_case": "UC7",
+    "use_case_name": "Verify prescriber ID",
+    "statement": "The system shall not allow a prescriber to create or sign a prescription for a controlled substance unless the identity verification has been successfully completed by a credential provider.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "DEA-02"
+    ],
+    "reasoning": "The DEA mandates that prescribers must be properly identified before issuing controlled substance prescriptions, preventing unauthorized or fraudulent prescribing actions.",
+    "acceptance_criteria": "Any attempt to create or sign a prescription for a controlled substance without successful identity verification shall result in an immediate rejection and user notification.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC7-05",
+    "use_case": "UC7",
+    "use_case_name": "Verify prescriber ID",
+    "statement": "The system shall ensure that the credential provider's identity proofing method is interoperable with the e-prescribing platform using standardized protocols such as OAuth or SAML for secure authentication.",
+    "type": "CON",
+    "priority": "Should",
+    "actor": "Credential provider",
+    "sources": [
+      "PROJ-02",
+      "SCRIPT-01"
+    ],
+    "reasoning": "Standardized authentication protocols ensure interoperability across different prescriber systems and support integration with existing healthcare IT infrastructure, enabling broader adoption.",
+    "acceptance_criteria": "The system must accept identity proofing tokens or assertions from credential providers that use OAuth 2.0 or SAML 2.0 as defined in industry standards.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC8-01",
+    "use_case": "UC8",
+    "use_case_name": "Review audit trail",
+    "statement": "The system shall record and provide access to a full audit trail of all events related to the creation, signing, transmission, and security aspects of controlled-substance prescriptions.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-06",
+      "PROJ-03"
+    ],
+    "reasoning": "The audit trail is essential for demonstrating compliance with DEA regulations and enabling verification of prescriber actions, especially for controlled substances. Evidence from DEA-06 mandates a full audit trail for controlled substance prescriptions.",
+    "acceptance_criteria": "A compliance officer can retrieve and review the complete sequence of events (e.g., creation, signing, transmission) for any prescribed controlled substance in real time or upon request.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC8-02",
+    "use_case": "UC8",
+    "use_case_name": "Review audit trail",
+    "statement": "The system shall allow the compliance officer to filter and search audit trail entries by date, prescriber, drug type, prescription status, and event type.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "PROJ-03",
+      "PROJ-04"
+    ],
+    "reasoning": "Efficient review of audit trails requires searchable and filterable data to identify specific events quickly, especially in large-scale or high-volume prescribing environments. This supports effective compliance monitoring.",
+    "acceptance_criteria": "The compliance officer can perform searches using at least four criteria: date range, prescriber ID, drug category (e.g., controlled substance), and event type (e.g., signed, transmitted).",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC8-03",
+    "use_case": "UC8",
+    "use_case_name": "Review audit trail",
+    "statement": "The system shall retain audit trail records for a minimum of 7 years from the date of the last prescription event involving a controlled substance.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-06"
+    ],
+    "reasoning": "The DEA requires long-term retention of audit trails to support compliance demonstrations and investigations, particularly for controlled substances. This duration aligns with regulatory expectations under 21 CFR Part 1311.",
+    "acceptance_criteria": "Audit trail records are stored securely and remain accessible for at least seven years after the last event involving a controlled substance prescription.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC8-04",
+    "use_case": "UC8",
+    "use_case_name": "Review audit trail",
+    "statement": "The system shall generate a timestamped, immutable log entry for each audit trail event that includes the user ID, action type, timestamp, and associated prescription identifier.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-06",
+      "PROJ-03"
+    ],
+    "reasoning": "Immutable, time-stamped logs ensure the integrity of audit trail data and prevent tampering or alteration. This supports accurate verification of prescriber actions and compliance with DEA EPCS rules.",
+    "acceptance_criteria": "Each event in the audit trail includes a timestamp, user ID, action type (e.g., 'prescription created'), and prescription ID, and these entries cannot be altered after creation.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC8-05",
+    "use_case": "UC8",
+    "use_case_name": "Review audit trail",
+    "statement": "The system shall support third-party auditing of its audit trail functionality at least every two years or whenever a significant change to the software occurs.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-04"
+    ],
+    "reasoning": "The DEA mandates third-party audits of e-prescribing software to ensure ongoing compliance and reliability. This requirement ensures that audit trail integrity is independently verified over time.",
+    "acceptance_criteria": "An external auditor completes a full review of the system's audit trail functionality, including data accuracy, completeness, and security, at least every two years or after any major functional change.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC8-06",
+    "use_case": "UC8",
+    "use_case_name": "Review audit trail",
+    "statement": "The system shall ensure that all audit trail records are stored in an encrypted format and accessible only to authorized personnel with appropriate roles and permissions.",
+    "type": "NFR",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-06",
+      "PROJ-01"
+    ],
+    "reasoning": "Protecting audit trail data from unauthorized access is critical to maintain the integrity and confidentiality of prescribing activities, especially for controlled substances. This aligns with security expectations in healthcare systems.",
+    "acceptance_criteria": "Audit trail records are encrypted at rest and accessed only by users with explicit authorization (e.g., compliance officer role), as verified through audit logs and access controls.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC9-01",
+    "use_case": "UC9",
+    "use_case_name": "Lock on audit failure",
+    "statement": "The system shall lock controlled-substance prescribing functionality when an audit failure is detected.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-05",
+      "PROJ-04"
+    ],
+    "reasoning": "To prevent unauthorized or non-compliant prescriptions from being issued when the system fails to meet DEA audit requirements, ensuring safety and regulatory compliance. The evidence shows that audit failures must be addressed promptly via notification and action.",
+    "acceptance_criteria": "When an audit failure is detected, controlled-substance prescribing functions must become inaccessible to all prescribers until the issue is resolved.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC9-02",
+    "use_case": "UC9",
+    "use_case_name": "Lock on audit failure",
+    "statement": "The system shall notify the DEA within 1 business day of any audit failure involving a controlled substance prescription.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-05"
+    ],
+    "reasoning": "This requirement directly stems from DEA regulations that mandate timely notification of audit failures to ensure regulatory compliance and accountability. The evidence explicitly states a 1-business-day deadline for such notifications.",
+    "acceptance_criteria": "Upon detection of an audit failure, the system must automatically trigger a notification to the DEA within one business day, with a record of transmission in the audit trail.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC9-03",
+    "use_case": "UC9",
+    "use_case_name": "Lock on audit failure",
+    "statement": "The system shall maintain a full audit trail of all events related to controlled-substance prescriptions during periods when prescribing is locked due to an audit failure.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-06",
+      "PROJ-04"
+    ],
+    "reasoning": "The DEA requires a complete audit trail for compliance demonstration, even during periods of system failure or lockdown. This ensures transparency and traceability for regulatory review and accountability.",
+    "acceptance_criteria": "All actions related to controlled-substance prescriptions—including attempts to prescribe while locked—must be logged in the audit trail with timestamps and user identifiers.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC9-04",
+    "use_case": "UC9",
+    "use_case_name": "Lock on audit failure",
+    "statement": "The system shall only allow the compliance officer to unlock controlled-substance prescribing after an audit failure has been resolved and verified by a third-party auditor.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-04",
+      "PROJ-04"
+    ],
+    "reasoning": "To ensure that the system is compliant before resuming prescribing, the unlock process must be tied to formal audit validation. The requirement for third-party audits establishes a baseline of trust and compliance verification.",
+    "acceptance_criteria": "Prescribing can only be re-enabled after the compliance officer confirms resolution of the failure and receives evidence from a third-party audit confirming system compliance.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC9-05",
+    "use_case": "UC9",
+    "use_case_name": "Lock on audit failure",
+    "statement": "The system shall record the reason for each audit failure in the audit trail when controlled-substance prescribing is locked.",
+    "type": "NFR",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-06",
+      "PROJ-04"
+    ],
+    "reasoning": "Providing clear, traceable failure reasons enables the compliance officer to investigate root causes and take corrective actions efficiently. This supports audit readiness and regulatory transparency.",
+    "acceptance_criteria": "Each audit failure must be accompanied by a recorded description of the failure type (e.g., missing signature, invalid timestamp) in the system's audit trail.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-UC9-06",
+    "use_case": "UC9",
+    "use_case_name": "Lock on audit failure",
+    "statement": "The system shall not allow any changes to controlled-substance prescriptions while prescribing is locked due to an audit failure.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-04"
+    ],
+    "reasoning": "To prevent unsafe or non-compliant prescription modifications during system failures, the system must enforce a complete lock on all prescribing actions. This aligns with safety and compliance goals outlined in the problem statement.",
+    "acceptance_criteria": "Any attempt by a prescriber to create, modify, or cancel a controlled-substance prescription while the system is locked shall be rejected with an error message indicating the audit failure status.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-XC-01",
+    "use_case": "XC",
+    "use_case_name": "Cross-cutting qualities",
+    "statement": "The system shall support the transmission of prescriptions using current and mandated versions of the NCPDP SCRIPT standard.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "SCRIPT-03"
+    ],
+    "reasoning": "CMS mandates specific versions of the NCPDP SCRIPT standard, which evolve over time. The system must remain compliant by supporting upgrades to new mandated versions.",
+    "acceptance_criteria": "The system successfully transmits prescriptions in accordance with the current mandated version of NCPDP SCRIPT when configured and validated against the latest standard.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-XC-02",
+    "use_case": "XC",
+    "use_case_name": "Cross-cutting qualities",
+    "statement": "The system shall perform real-time safety checks for drug interactions, allergies, and correct dosing during prescription creation.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-01"
+    ],
+    "reasoning": "Paper-based prescribing leads to medication errors due to illegible handwriting or missed interactions. Safety checks using a drug knowledge base reduce these risks and improve patient safety.",
+    "acceptance_criteria": "When a prescription is created, the system must detect and alert the prescriber to any known drug interactions, allergies, or incorrect dosing based on current drug knowledge data.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-XC-03",
+    "use_case": "XC",
+    "use_case_name": "Cross-cutting qualities",
+    "statement": "The system shall maintain a full audit trail of all events related to controlled-substance prescriptions, including creation, signing, transmission, and cancellation.",
+    "type": "REG",
+    "priority": "Must",
+    "actor": "Compliance officer",
+    "sources": [
+      "DEA-06"
+    ],
+    "reasoning": "The DEA's EPCS regulations require a full audit trail to demonstrate compliance with controlled substance prescription rules. This enables verification of prescriber identity and actions over time.",
+    "acceptance_criteria": "All events involving controlled-substance prescriptions—such as creation, signing, transmission, and cancellation—are recorded in an immutable, timestamped log accessible for review.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-XC-04",
+    "use_case": "XC",
+    "use_case_name": "Cross-cutting qualities",
+    "statement": "The system shall verify prescriber identity using two-factor authentication before allowing the creation or signing of a prescription for controlled substances.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-04"
+    ],
+    "reasoning": "Two-factor signing is required for controlled drugs under EPCS to prevent forgery and ensure only authorized prescribers can issue prescriptions.",
+    "acceptance_criteria": "Before a prescription for a controlled substance is signed, the system must confirm the prescriber's identity through two-factor authentication (e.g., password and token).",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-XC-05",
+    "use_case": "XC",
+    "use_case_name": "Cross-cutting qualities",
+    "statement": "The system shall ensure that all prescription transmissions are securely encrypted in transit using TLS 1.2 or higher.",
+    "type": "NFR",
+    "priority": "Must",
+    "actor": "Pharmacy system",
+    "sources": [
+      "PROJ-01"
+    ],
+    "reasoning": "Secure transmission is essential to prevent unauthorized access and tampering of prescription data, especially for controlled substances that are vulnerable to misuse.",
+    "acceptance_criteria": "All messages sent from the prescriber system to the pharmacy must be encrypted using TLS 1.2 or higher during transmission.",
+    "needs_validation": false
+  },
+  {
+    "id": "REQ-XC-06",
+    "use_case": "XC",
+    "use_case_name": "Cross-cutting qualities",
+    "statement": "The system shall automatically detect and notify the prescriber when a prescribed drug is flagged for interaction or allergy in real time, based on an external drug knowledge base.",
+    "type": "FR",
+    "priority": "Must",
+    "actor": "Prescriber",
+    "sources": [
+      "PROJ-01"
+    ],
+    "reasoning": "Manual processes fail to catch interactions and allergies. Real-time checks using a reliable drug knowledge base reduce medication errors and improve patient safety.",
+    "acceptance_criteria": "The system must detect and alert the prescriber within seconds of entering a new prescription if any known interaction or allergy exists with existing medications.",
+    "needs_validation": false
+  }
+]

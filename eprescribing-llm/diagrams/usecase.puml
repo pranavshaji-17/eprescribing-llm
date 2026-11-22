@@ -1,0 +1,39 @@
+@startuml
+left to right direction
+skinparam shadowing false
+
+actor "Prescriber" as A1
+actor "Pharmacy system" as A2
+actor "Drug knowledge base" as A3
+actor "Credential provider" as A4
+actor "Compliance officer" as A5
+
+rectangle "e-Prescribing System" {
+  usecase "Create medication order" as UC1
+  usecase "Run safety checks" as UC2
+  usecase "Cancel or change order" as UC3
+  usecase "Transmit to pharmacy" as UC4
+  usecase "Sign prescription" as UC5
+  usecase "Two-factor signing" as UC6
+  usecase "Verify prescriber ID" as UC7
+  usecase "Review audit trail" as UC8
+  usecase "Lock on audit failure" as UC9
+}
+
+A1 --> UC1
+A3 --> UC2
+A1 --> UC3
+A2 --> UC4
+A1 --> UC5
+A1 --> UC6
+A4 --> UC7
+A5 --> UC8
+A5 --> UC9
+
+UC1 ..> UC2 : <<include>>
+UC3 ..> UC4 : <<include>>
+UC4 ..> UC5 : <<include>>
+UC6 ..> UC7 : <<include>>
+UC6 ..> UC5 : <<extend>>\n(only for controlled drugs)
+UC9 ..> UC8 : <<extend>>\n(only when an audit fails)
+@enduml

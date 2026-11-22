@@ -1,0 +1,32 @@
+flowchart LR
+  A1(["Prescriber"])
+  A2(["Pharmacy system"])
+  A3(["Drug knowledge base"])
+  A4(["Credential provider"])
+  A5(["Compliance officer"])
+  subgraph SYS["e-Prescribing System"]
+    UC1(("Create medication order"))
+    UC2(("Run safety checks"))
+    UC3(("Cancel or change order"))
+    UC4(("Transmit to pharmacy"))
+    UC5(("Sign prescription"))
+    UC6(("Two-factor signing"))
+    UC7(("Verify prescriber ID"))
+    UC8(("Review audit trail"))
+    UC9(("Lock on audit failure"))
+  end
+  A1 --- UC1
+  A3 --- UC2
+  A1 --- UC3
+  A2 --- UC4
+  A1 --- UC5
+  A1 --- UC6
+  A4 --- UC7
+  A5 --- UC8
+  A5 --- UC9
+  UC1 -. "include" .-> UC2
+  UC3 -. "include" .-> UC4
+  UC4 -. "include" .-> UC5
+  UC6 -. "include" .-> UC7
+  UC6 -. "extend: only for controlled drugs" .-> UC5
+  UC9 -. "extend: only when an audit fails" .-> UC8

@@ -1,0 +1,156 @@
+{
+  "profile": {
+    "upfront_definition": {
+      "rating": 5,
+      "evidence": [
+        "REQ-UC1-01",
+        "REQ-UC1-02",
+        "REQ-UC1-03",
+        "REQ-UC1-04",
+        "REQ-UC2-01",
+        "REQ-UC2-02",
+        "REQ-UC2-05",
+        "REQ-UC2-06",
+        "REQ-UC3-01",
+        "REQ-UC3-02",
+        "REQ-UC3-03",
+        "REQ-UC3-04",
+        "REQ-UC4-01",
+        "REQ-UC4-02",
+        "REQ-UC4-04",
+        "REQ-UC5-01",
+        "REQ-UC5-02",
+        "REQ-UC5-03",
+        "REQ-UC5-04",
+        "REQ-UC5-05",
+        "REQ-UC6-01",
+        "REQ-UC6-02",
+        "REQ-UC6-03",
+        "REQ-UC6-04",
+        "REQ-UC6-05",
+        "REQ-UC7-01",
+        "REQ-UC7-02",
+        "REQ-UC7-03",
+        "REQ-UC7-04",
+        "REQ-UC8-01",
+        "REQ-UC8-02",
+        "REQ-UC8-03",
+        "REQ-UC8-04",
+        "REQ-UC8-05",
+        "REQ-UC8-06",
+        "REQ-UC9-01",
+        "REQ-UC9-02",
+        "REQ-UC9-03",
+        "REQ-UC9-04",
+        "REQ-UC9-05",
+        "REQ-UC9-06",
+        "REQ-XC-01",
+        "REQ-XC-02",
+        "REQ-XC-03",
+        "REQ-XC-04",
+        "REQ-XC-05",
+        "REQ-XC-06"
+      ],
+      "reasoning": "All requirements are precisely defined, with clear actions, conditions, and outcomes. For example, REQ-UC2-05 explicitly prohibits finalization if critical safety alerts exist, and REQ-UC4-03 mandates support for new NCPDP SCRIPT versions—indicating a stable, well-defined scope that requires upfront specification."
+    },
+    "regulatory_rigor": {
+      "rating": 5,
+      "evidence": [
+        "REQ-UC1-05",
+        "REQ-UC2-04",
+        "REQ-UC3-06",
+        "REQ-UC4-05",
+        "REQ-UC5-03",
+        "REQ-UC6-03",
+        "REQ-UC6-05",
+        "REQ-UC7-03",
+        "REQ-UC8-01",
+        "REQ-UC8-02",
+        "REQ-UC8-03",
+        "REQ-UC8-05",
+        "REQ-UC9-02",
+        "REQ-UC9-03",
+        "REQ-XC-03"
+      ],
+      "reasoning": "Multiple requirements mandate formal audit trails, logging of events with timestamps and user IDs, retention periods (e.g., 7 years), third-party auditing, and compliance gates such as locking prescribing during audit failures—demonstrating high regulatory rigor."
+    },
+    "safety_criticality": {
+      "rating": 5,
+      "evidence": [
+        "REQ-UC2-01",
+        "REQ-UC2-02",
+        "REQ-UC2-05",
+        "REQ-UC2-06",
+        "REQ-UC4-06",
+        "REQ-UC5-05",
+        "REQ-XC-02",
+        "REQ-XC-06"
+      ],
+      "reasoning": "The system must perform real-time safety checks for drug interactions and allergies, block finalization of orders with critical alerts, and ensure prescriptions are signed only after safety checks—indicating high patient risk and the need for rigorous safety validation."
+    },
+    "traceability": {
+      "rating": 5,
+      "evidence": [
+        "REQ-UC1-02",
+        "REQ-UC3-04",
+        "REQ-UC4-04",
+        "REQ-UC6-03",
+        "REQ-UC7-03",
+        "REQ-UC8-04",
+        "REQ-UC9-05"
+      ],
+      "reasoning": "Each action (e.g., prescription creation, change, cancellation) is tied to specific resources and events with clear audit trail entries including timestamps, user IDs, and actions—enabling full traceability from requirement through execution."
+    },
+    "standards_volatility": {
+      "rating": 4,
+      "evidence": [
+        "REQ-UC1-05",
+        "REQ-UC3-05",
+        "REQ-UC4-03",
+        "REQ-XC-01"
+      ],
+      "reasoning": "The system must support upgrades to new mandated versions of NCPDP SCRIPT and controlled substance standards, indicating a need to adapt to evolving external standards—though the frequency or scope is not fully detailed, it still demands significant volatility handling."
+    },
+    "ui_iteration": {
+      "rating": 2,
+      "evidence": [],
+      "reasoning": "No requirement addresses user interface design, workflow refinement, or prescriber feedback loops. All functional requirements are defined at a system level without any mention of UI iteration or usability testing."
+    },
+    "early_feedback": {
+      "rating": 3,
+      "evidence": [
+        "REQ-UC2-02",
+        "REQ-UC5-05",
+        "REQ-XC-06"
+      ],
+      "reasoning": "Safety alerts must be displayed before finalization, and real-time interaction flags are required—implying prescriber feedback is needed during prescription creation. However, no requirement explicitly calls for early stakeholder feedback or iterative refinement of workflow."
+    }
+  },
+  "ranking": [
+    [
+      "Hybrid (V-Model gates + Agile sprints)",
+      83.4
+    ],
+    [
+      "V-Model",
+      80.0
+    ],
+    [
+      "Spiral",
+      77.2
+    ],
+    [
+      "Incremental/Iterative",
+      66.2
+    ],
+    [
+      "Waterfall",
+      61.4
+    ],
+    [
+      "Agile (Scrum)",
+      55.2
+    ]
+  ],
+  "raw_profile_reply": "{\n  \"ratings\": [\n    {\n      \"criterion\": \"upfront_definition\",\n      \"rating\": 5,\n      \"evidence\": [\n        \"REQ-UC1-01\",\n        \"REQ-UC1-02\",\n        \"REQ-UC1-03\",\n        \"REQ-UC1-04\",\n        \"REQ-UC2-01\",\n        \"REQ-UC2-02\",\n        \"REQ-UC2-05\",\n        \"REQ-UC2-06\",\n        \"REQ-UC3-01\",\n        \"REQ-UC3-02\",\n        \"REQ-UC3-03\",\n        \"REQ-UC3-04\",\n        \"REQ-UC4-01\",\n        \"REQ-UC4-02\",\n        \"REQ-UC4-04\",\n        \"REQ-UC5-01\",\n        \"REQ-UC5-02\",\n        \"REQ-UC5-03\",\n        \"REQ-UC5-04\",\n        \"REQ-UC5-05\",\n        \"REQ-UC6-01\",\n        \"REQ-UC6-02\",\n        \"REQ-UC6-03\",\n        \"REQ-UC6-04\",\n        \"REQ-UC6-05\",\n        \"REQ-UC7-01\",\n        \"REQ-UC7-02\",\n        \"REQ-UC7-03\",\n        \"REQ-UC7-04\",\n        \"REQ-UC8-01\",\n        \"REQ-UC8-02\",\n        \"REQ-UC8-03\",\n        \"REQ-UC8-04\",\n        \"REQ-UC8-05\",\n        \"REQ-UC8-06\",\n        \"REQ-UC9-01\",\n        \"REQ-UC9-02\",\n        \"REQ-UC9-03\",\n        \"REQ-UC9-04\",\n        \"REQ-UC9-05\",\n        \"REQ-UC9-06\",\n        \"REQ-XC-01\",\n        \"REQ-XC-02\",\n        \"REQ-XC-03\",\n        \"REQ-XC-04\",\n        \"REQ-XC-05\",\n        \"REQ-XC-06\"\n      ],\n      \"reasoning\": \"All requirements are precisely defined, with clear actions, conditions, and outcomes. For example, REQ-UC2-05 explicitly prohibits finalization if critical safety alerts exist, and REQ-UC4-03 mandates support for new NCPDP SCRIPT versions—indicating a stable, well-defined scope that requires upfront specification.\"\n    },\n    {\n      \"criterion\": \"regulatory_rigor\",\n      \"rating\": 5,\n      \"evidence\": [\n        \"REQ-UC1-05\",\n        \"REQ-UC2-04\",\n        \"REQ-UC3-06\",\n        \"REQ-UC4-05\",\n        \"REQ-UC5-03\",\n        \"REQ-UC6-03\",\n        \"REQ-UC6-05\",\n        \"REQ-UC7-03\",\n        \"REQ-UC8-01\",\n        \"REQ-UC8-02\",\n        \"REQ-UC8-03\",\n        \"REQ-UC8-05\",\n        \"REQ-UC9-02\",\n        \"REQ-UC9-03\",\n        \"REQ-XC-03\"\n      ],\n      \"reasoning\": \"Multiple requirements mandate formal audit trails, logging of events with timestamps and user IDs, retention periods (e.g., 7 years), third-party auditing, and compliance gates such as locking prescribing during audit failures—demonstrating high regulatory rigor.\"\n    },\n    {\n      \"criterion\": \"safety_criticality\",\n      \"rating\": 5,\n      \"evidence\": [\n        \"REQ-UC2-01\",\n        \"REQ-UC2-02\",\n        \"REQ-UC2-05\",\n        \"REQ-UC2-06\",\n        \"REQ-UC4-06\",\n        \"REQ-UC5-05\",\n        \"REQ-XC-02\",\n        \"REQ-XC-06\"\n      ],\n      \"reasoning\": \"The system must perform real-time safety checks for drug interactions and allergies, block finalization of orders with critical alerts, and ensure prescriptions are signed only after safety checks—indicating high patient risk and the need for rigorous safety validation.\"\n    },\n    {\n      \"criterion\": \"traceability\",\n      \"rating\": 5,\n      \"evidence\": [\n        \"REQ-UC1-02\",\n        \"REQ-UC3-04\",\n        \"REQ-UC4-04\",\n        \"REQ-UC6-03\",\n        \"REQ-UC7-03\",\n        \"REQ-UC8-04\",\n        \"REQ-UC9-05\"\n      ],\n      \"reasoning\": \"Each action (e.g., prescription creation, change, cancellation) is tied to specific resources and events with clear audit trail entries including timestamps, user IDs, and actions—enabling full traceability from requirement through execution.\"\n    },\n    {\n      \"criterion\": \"standards_volatility\",\n      \"rating\": 4,\n      \"evidence\": [\n        \"REQ-UC1-05\",\n        \"REQ-UC3-05\",\n        \"REQ-UC4-03\",\n        \"REQ-XC-01\"\n      ],\n      \"reasoning\": \"The system must support upgrades to new mandated versions of NCPDP SCRIPT and controlled substance standards, indicating a need to adapt to evolving external standards—though the frequency or scope is not fully detailed, it still demands significant volatility handling.\"\n    },\n    {\n      \"criterion\": \"ui_iteration\",\n      \"rating\": 2,\n      \"evidence\": [],\n      \"reasoning\": \"No requirement addresses user interface design, workflow refinement, or prescriber feedback loops. All functional requirements are defined at a system level without any mention of UI iteration or usability testing.\"\n    },\n    {\n      \"criterion\": \"early_feedback\",\n      \"rating\": 3,\n      \"evidence\": [\n        \"REQ-UC2-02\",\n        \"REQ-UC5-05\",\n        \"REQ-XC-06\"\n      ],\n      \"reasoning\": \"Safety alerts must be displayed before finalization, and real-time interaction flags are required—implying prescriber feedback is needed during prescription creation. However, no requirement explicitly calls for early stakeholder feedback or iterative refinement of workflow.\"\n    }\n  ]\n}"
+}
