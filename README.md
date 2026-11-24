@@ -16,8 +16,6 @@ Individual Software Engineering project (Sem 5) by **Pranav Shaji (241CS243)**. 
 ## Outputs (`outputs/`)
 
 - `requirements.md` / `requirements.json`: requirements, reasoning, traceability table
-- `part1_trace.json`: every prompt, retrieved chunk IDs and raw reply (for your report appendix)
-- `sdlc_profile.json`, `sdlc_matrix.md`: demand ratings, fit table, ranking
 - `sdlc_recommendation.md` / `.json`: final model, justification, tailored process
 
 ## Source documents (`corpus/`)
