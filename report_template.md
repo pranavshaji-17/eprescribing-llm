@@ -35,11 +35,6 @@ For each of HL7 FHIR MedicationRequest, DEA EPCS (21 CFR 1311), NCPDP SCRIPT: wh
 - Your own critique: do you agree? Which requirement IDs drive the choice? How does the chosen model resolve regulatory rigidity vs changing standards/UI iteration?
 - Why each other model is weaker (Waterfall, V-Model, Incremental, Spiral, Agile, Hybrid).
 
-## 7. Evaluation and limitations
-- `validate.py` output (key-fact coverage, citation validity).
-- Limits: small-model errors, condensed corpus, heuristic fit table, single run (consider repeating with temperature 0.2 vs 0.7 and comparing).
-
-## 8. Conclusion
 
 ## References
 HL7 FHIR MedicationRequest; 21 CFR Part 1311 (eCFR); NCPDP SCRIPT; Sommerville, *Software Engineering*; Pressman, *Software Engineering: A Practitioner's Approach*.
