@@ -28,14 +28,11 @@ real excerpts as extra chunks so the LLM is grounded in the actual text.
 
 ```
 corpus/                 source chunks (edit/extend these)
-domain.py               actors, use cases, SDLC criteria + fit table
-rag.py                  chunking + BM25 retrieval
 llm_client.py           LM Studio client, JSON extraction, mock mode
 prompts.py              all prompts (quote these in the report)
 part1_requirements.py   part 1
 part2_sdlc.py           part 2
 pipeline.py             runs everything
 validate.py             output checks
-make_diagram.py         use case diagram
 docs/report_template.md report skeleton
 ```
