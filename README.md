@@ -10,7 +10,6 @@ Individual Software Engineering project (Sem 5) by **Pranav Shaji (241CS243)**. 
 | **Part 1**: generate requirements + reasoning | `part1_requirements.py` | For each of the 9 use cases (plus one cross-cutting pass), BM25 retrieves the most relevant chunks of the source documents; the LLM writes atomic "shall" requirements with `sources`, `reasoning`, `acceptance_criteria`. |
 | **Part 2**: pick the SDLC model | `part2_sdlc.py` | (A) LLM rates how strongly the requirements demand 7 process criteria, citing requirement IDs. (B) Python computes a transparent weighted decision matrix over 6 models. (C) LLM gives the final recommendation + justification, free to disagree with the matrix if it explains why. |
 | Evidence/evaluation | `validate.py` | Checks IDs, "shall", valid citations, use-case coverage, key-fact coverage, valid requirement IDs in the SDLC justification. |
-| Diagram | `make_diagram.py` | Generates the 9-use-case diagram (PlantUML, Mermaid, PNG) from `domain.py`. |
 
 
 ## Outputs (`outputs/`)
